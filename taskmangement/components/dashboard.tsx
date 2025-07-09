@@ -289,7 +289,7 @@ export default function Dashboard() {
           {activeTab === "dashboard" && (
             <div className="space-y-8">
               {/* Enhanced Stats Cards with Role-based Data */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
                   {
                     title: "Total Tasks",
@@ -299,14 +299,7 @@ export default function Dashboard() {
                     bgGradient: "from-blue-50 to-indigo-50",
                     description: "All accessible tasks",
                   },
-                  {
-                    title: "Tasks Owned",
-                    value: stats.owned,
-                    icon: User,
-                    gradient: "from-emerald-500 to-teal-500",
-                    bgGradient: "from-emerald-50 to-teal-50",
-                    description: "Tasks you created",
-                  },
+                 
                   {
                     title: "Assigned to You",
                     value: stats.assigned,
@@ -329,7 +322,7 @@ export default function Dashboard() {
                     className={`bg-gradient-to-br ${stat.bgGradient} border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1`}
                   >
                     <CardContent className="p-6">
-                      <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center justify-between mb-6">
                         <div
                           className={`w-12 h-12 bg-gradient-to-r ${stat.gradient} rounded-xl flex items-center justify-center shadow-lg`}
                         >
