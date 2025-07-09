@@ -99,7 +99,7 @@ const toggleAssignee = (userId: string) => {
 
 
 
-
+const isAdmin = currentUser.role === "admin"
 
 
   const getAllUser = async ()=>{
@@ -161,6 +161,7 @@ const toggleAssignee = (userId: string) => {
                   value={formData.title}
                   onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                   required
+                  disabled={!isAdmin}
                   className="h-12 bg-white/50 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
                   placeholder="Enter task title..."
                 />
@@ -171,6 +172,7 @@ const toggleAssignee = (userId: string) => {
                 </Label>
                 <Input
                   id="company"
+                  disabled={!isAdmin}
                   value={formData.company}
                   onChange={(e) => setFormData((prev) => ({ ...prev, company: e.target.value }))}
                   className="h-12 bg-white/50 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
@@ -194,6 +196,7 @@ const toggleAssignee = (userId: string) => {
                 </Label>
                 <Select
                   value={formData.type}
+                  disabled={!isAdmin}
                   onValueChange={(value: TaskType) => setFormData((prev) => ({ ...prev, type: value }))}
                 >
                   <SelectTrigger className="h-12 bg-white/50 border-slate-200">
@@ -226,6 +229,7 @@ const toggleAssignee = (userId: string) => {
                 <Input
                   id="time"
                   type="time"
+                  disabled={!isAdmin}
                   value={formData.time}
                   onChange={(e) => setFormData((prev) => ({ ...prev, time: e.target.value }))}
                   className="h-12 bg-white/50 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
@@ -244,6 +248,7 @@ const toggleAssignee = (userId: string) => {
                     <button
                       key={option.value}
                       type="button"
+                      disabled={!isAdmin}
                       onClick={() => setFormData((prev) => ({ ...prev, color: option.value as TaskColor }))}
                       className={`flex items-center gap-3 p-3 rounded-lg border-2 transition-all duration-200 ${formData.color === option.value
                           ? "border-blue-500 bg-blue-50"
@@ -344,6 +349,7 @@ const toggleAssignee = (userId: string) => {
                   >
                     <Checkbox
                       id={`user-${user._id}`}
+                      disabled={!isAdmin}
                       checked={formData.assignees.includes(user._id)}
                       onClick={() => toggleAssignee(user._id)}
                     />
@@ -369,6 +375,7 @@ const toggleAssignee = (userId: string) => {
               <Checkbox
                 id="recurring"
                 checked={formData.isRecurring}
+                disabled={!isAdmin}
                 onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, isRecurring: !!checked }))}
               />
               <Label htmlFor="recurring" className="font-medium text-slate-700">

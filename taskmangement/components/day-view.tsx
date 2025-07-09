@@ -204,26 +204,13 @@ function DayView({ tasks, selectedDate, onDateChange, onTaskEdit, users, current
                                 {task.notes && (
                                   <p className="text-sm opacity-75 mb-3 bg-white/30 p-2 rounded-md">{task.notes}</p>
                                 )}
-                                {task.assignees.length > 0 && (
-                                  <div className="space-y-2">
-                                    <p className="text-xs font-medium opacity-75">
-                                      {task.type === "Meeting" ? "Participants:" : "Assigned to:"}
-                                    </p>
-                                    <div className="flex flex-wrap gap-1">
-                                      {task.assignees.map((userId) => (
-                                        <Badge key={userId} variant="secondary" className="text-xs bg-white/60">
-                                          {getUserName(userId)}
-                                        </Badge>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
+                              
                               </div>
                               <div className="flex items-center gap-2 ml-4">
                                 <Badge className={`${getStatusColor(task.workflowStatus)} text-xs shadow-sm`}>
                                   {task.workflowStatus}
                                 </Badge>
-                                {currentUser?.role == "admin" && (
+                                { (
                                   <Button
                                     variant="ghost"
                                     size="sm"

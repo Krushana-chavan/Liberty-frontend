@@ -39,7 +39,7 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("dashboard")
 
   console.log("Current User:", user)
-  const handleCreateTask =  async (taskData: Omit<Task, "id" | "createdAt">) => {
+  const handleCreateTask = async (taskData: Omit<Task, "id" | "createdAt">) => {
     const newTask: Task = {
       ...taskData,
       userId: user?._id || "",
@@ -47,24 +47,24 @@ export default function Dashboard() {
     }
 
     console.log(newTask)
-try{ 
-    const result = await apiRequest({
-      url: "/task/create",
-      method: "POST",
-      data: newTask,
-    })
-    console.log("Task created successfully:", result)
-     
-    setShowTaskForm(false)
-  }catch (error) {
-    console.error("Error creating task:", error)
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Failed to create task. Please try again.",
-    })
-  }
-    
+    try {
+      const result = await apiRequest({
+        url: "/task/create",
+        method: "POST",
+        data: newTask,
+      })
+      console.log("Task created successfully:", result)
+
+      setShowTaskForm(false)
+    } catch (error) {
+      console.error("Error creating task:", error)
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to create task. Please try again.",
+      })
+    }
+
 
 
     if (taskData.assignees.length > 0) {
@@ -79,7 +79,7 @@ try{
     console.log("user",)
     try {
       const response = await apiRequest({
-        url: user?.role == "admin"?"/task/getAllTask": `/task/loggedInUserTasks/${user?._id}`,
+        url: user?.role == "admin" ? "/task/getAllTask" : `/task/loggedInUserTasks/${user?._id}`,
         method: "GET",
       })
       setTasks(response)
@@ -107,23 +107,23 @@ try{
     workflowStatus?: WorkflowStatus
     completionStatus?: string
     assignees?: string[]
-     // Allow additional fields
+    // Allow additional fields
   }
 
   const handleUpdateTask = async (
     id: string,
     data: UpdateTaskData
   ): Promise<void> => {
-  
+
     const updatetResult = await apiRequest({
       url: `/task/updateTask/${id}`,
       method: "PUT",
       data
-  }
+    }
 
     )
-      getAllTasks()
-    console.log("Task updated successfully:", updatetResult) 
+    getAllTasks()
+    console.log("Task updated successfully:", updatetResult)
     setEditingTask(null)
     Swal.fire({
       icon: "success",
@@ -131,7 +131,7 @@ try{
       text: "Task updated successfully!",
     })
   }
- 
+
 
   const getStatusColor = (status: WorkflowStatus) => {
     switch (status) {
@@ -155,7 +155,7 @@ try{
   const isTaskAssignee = (task: Task) => task.assignees.includes(user?._id || "")
   const canViewTask = (task: Task) => isTaskOwner(task) || isTaskAssignee(task)
 
-  const userTasks = tasks &&  tasks.filter(canViewTask)
+  const userTasks = tasks && tasks.filter(canViewTask)
   const ownedTasks = tasks && tasks.filter(isTaskOwner)
   const assignedTasks = tasks && tasks.filter(isTaskAssignee)
 
@@ -208,14 +208,14 @@ try{
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button
+           { user.role == "admin" &&  <Button
               onClick={() => setShowTaskForm(true)}
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
             >
               <Plus className="w-4 h-4 mr-2" />
               New Task
-            </Button>
-          
+            </Button>}
+
             <Button
               variant="outline"
               size="icon"
@@ -235,22 +235,24 @@ try{
             {[
               { id: "dashboard", label: "Dashboard", icon: TrendingUp, gradient: "from-blue-500 to-indigo-500" },
               { id: "day-view", label: "Day View", icon: Calendar, gradient: "from-emerald-500 to-teal-500" },
-              { id: "users", label: "Team", icon: Users, gradient: "from-purple-500 to-pink-500" },
+              ...(user?.role === "admin"
+                ? [{ id: "users", label: "Team", icon: Users, gradient: "from-purple-500 to-pink-500" }]
+                : []),
             ].map((item) => (
               <Button
                 key={item.id}
                 variant={activeTab === item.id ? "default" : "ghost"}
-                className={`w-full justify-start h-12 transition-all duration-200 ${
-                  activeTab === item.id
+                className={`w-full justify-start h-12 transition-all duration-200 ${activeTab === item.id
                     ? `bg-gradient-to-r ${item.gradient} text-white shadow-lg hover:shadow-xl transform scale-105`
                     : "hover:bg-slate-50 hover:scale-102"
-                }`}
+                  }`}
                 onClick={() => setActiveTab(item.id)}
               >
                 <item.icon className="w-5 h-5 mr-3" />
                 {item.label}
               </Button>
             ))}
+
           </div>
 
           {/* Role-based Quick Stats */}
@@ -423,7 +425,7 @@ try{
               </Card>
 
               {/* Overdue Tasks */}
-              {overdueTasks &&  overdueTasks?.length > 0 && (
+              {overdueTasks && overdueTasks?.length > 0 && (
                 <Card className="bg-gradient-to-br from-red-50 to-pink-50 border-red-200/60 shadow-xl">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-3 text-red-700">
@@ -489,7 +491,7 @@ try{
             />
           )}
 
-          
+
           {activeTab === "users" && <UserManagement />}
         </main>
       </div>
@@ -505,9 +507,9 @@ try{
             onSubmit={
               editingTask && editingTask._id
                 ? (data) => {
-                    handleUpdateTask(editingTask._id as string, data)
-                    setEditingTask(null)
-                  }
+                  handleUpdateTask(editingTask._id as string, data)
+                  setEditingTask(null)
+                }
                 : handleCreateTask
             }
             onClose={() => {
