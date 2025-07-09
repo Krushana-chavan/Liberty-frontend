@@ -2,7 +2,7 @@
 import AuthPage from "@/components/auth-page"
 import Dashboard from "@/components/dashboard"
 import { AuthProvider, useAuth } from "@/contexts/auth-context"
-import type { Task, User as UserType } from "@/types/task"
+
 
 
 function AppContent() {

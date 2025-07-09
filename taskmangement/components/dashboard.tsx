@@ -131,15 +131,7 @@ try{
       text: "Task updated successfully!",
     })
   }
-  const handleDeleteTask = useCallback(
-    (taskId: string) => {
-      // const task = tasks &&  tasks.find((t) => t.id === taskId)
-      // if (task && isTaskOwner(task)) {
-      //   setTasks((prev) => prev.filter((task) => task.id !== taskId))
-      // }
-    },
-    [tasks, user?._id],
-  )
+ 
 
   const getStatusColor = (status: WorkflowStatus) => {
     switch (status) {

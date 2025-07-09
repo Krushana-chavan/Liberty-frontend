@@ -47,20 +47,13 @@ export default function AuthPage() {
       }
     } catch (err) {
       setError("An unexpected error occurred")
+      console.error("Authentication error:", err)
     } finally {
       setLoading(false)
     }
   }
 
-  const demoCredentials = useMemo(
-    () => [
-      { name: "John Doe", email: "john@example.com" },
-      { name: "Jane Smith", email: "jane@example.com" },
-      { name: "Mike Johnson", email: "mike@example.com" },
-      { name: "Sarah Wilson", email: "sarah@example.com" },
-    ],
-    [],
-  )
+ 
 
   const handleDemoLogin = useCallback(
     async (email: string) => {
