@@ -6,7 +6,7 @@ export interface User {
 }
 
 export interface fetchUser {
-  [x: string]: any
+ 
     _id: string
   name: string
   email: string

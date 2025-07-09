@@ -333,10 +333,10 @@ const toggleAssignee = (userId: string) => {
 
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {availableUsers &&  availableUsers?.map((user:any) => (
+                {Array.isArray(availableUsers) && availableUsers.map((user: User) => (
                   <div
                     key={user._id}
-                    className={`flex items-center space-x-3 p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer ${formData.assignees.includes(user.id)
+                    className={`flex items-center space-x-3 p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer ${formData.assignees.includes(user._id)
                         ? "border-blue-500 bg-blue-50"
                         : "border-slate-200 bg-white/50 hover:border-slate-300"
                       }`}

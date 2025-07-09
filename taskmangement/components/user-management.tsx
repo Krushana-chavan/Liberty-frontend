@@ -7,12 +7,12 @@ import { Users, Mail, Shield, UserCheck, Building, TrendingUp } from "lucide-rea
 import { useAuth } from "@/contexts/auth-context"
 import React, { useMemo, useCallback, useEffect } from "react"
 import { apiRequest } from "@/lib/api"
-import { fetchUser } from "@/types/task"
+import { fetchUser, User } from "@/types/task"
 
 function UserManagement() {
   const {  user: currentUser } = useAuth()
 
-  const [users, setUsers] = React.useState<fetchUser>()
+  const [users, setUsers] = React.useState<User[]>([])
 
   const getInitials = useCallback((name: string) => {
     return name
@@ -23,13 +23,12 @@ function UserManagement() {
   }, [])
 
 
-  const getAllUsers = async() =>{
+  const getAllUsers = async () => {
     const userList = await apiRequest({
       url: "/user/alluser",
       method: "GET"
     })
-    setUsers(userList)
-  
+    setUsers(userList || [])
   }
 
   useEffect(() => {
@@ -42,7 +41,7 @@ function UserManagement() {
     return colors[index % colors?.length]
   }, [])
 
-  const uniqueDomains = useMemo(() => new Set(users && users.map((u:any) => u.email.split("@")[1])).size, [users])
+  const uniqueDomains = useMemo(() => new Set(users && users.map((u:User) => u.email.split("@")[1])).size, [users])
 
   return (
     <div className="space-y-6">
@@ -83,7 +82,7 @@ function UserManagement() {
               <div>
                 <p className="text-sm font-medium text-slate-600 mb-1">Active Users</p>
                 <p className="text-3xl font-bold text-emerald-600">
-                  {users && users.filter((u:any) => u.email.includes("@")).length}
+                  {users && users.filter((u:User) => u.email.includes("@")).length}
                 </p>
               </div>
               <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center">
@@ -121,11 +120,11 @@ function UserManagement() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            { users && users.map((user:any, index:any) => (
+            { users && users.map((user:User, index:number) => (
               <Card
-                key={user.id}
+                key={user._id}
                 className={`bg-white border shadow-sm hover:shadow-md transition-shadow duration-200 ${
-                  user.id === currentUser?._id ? "ring-2 ring-blue-500 bg-blue-50/80" : ""
+                  user._id === currentUser?._id ? "ring-2 ring-blue-500 bg-blue-50/80" : ""
                 }`}
               >
                 <CardContent className="p-6">
@@ -138,7 +137,7 @@ function UserManagement() {
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold text-slate-900">{user.name}</h3>
-                        {user.id === currentUser?._id && (
+                        {user._id === currentUser?._id && (
                           <Badge className="text-xs bg-gradient-to-r from-blue-500 to-indigo-500">
                             <Shield className="w-3 h-3 mr-1" />
                             You
