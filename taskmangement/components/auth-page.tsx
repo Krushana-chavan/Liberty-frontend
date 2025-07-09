@@ -31,14 +31,19 @@ export default function AuthPage() {
 
     try {
       let result
+      let SignupResult
       if (isSignUp) {
-        result = await signUp(formData.name, formData.email, formData.password)
+         SignupResult= await signUp(formData.name, formData.email, formData.password)
       } else {
         result = await signIn(formData.email, formData.password)
       }
-
-      if (!result.success) {
-        setError(result.error || "Authentication failed")
+      if (!SignupResult?.success) {
+        setFormData({ name: "", email: "", password: "" })
+        setIsSignUp(false)
+        return
+      }
+      if (!result?.success) {
+        setError(result?.error || "Authentication failed")
       }
     } catch (err) {
       setError("An unexpected error occurred")
@@ -231,33 +236,6 @@ export default function AuthPage() {
             </CardContent>
           </Card>
 
-          {/* Demo Accounts */}
-          <Card className="bg-white border shadow-xl">
-            <CardHeader>
-              <CardTitle className="text-lg text-center">Try Demo Accounts</CardTitle>
-              <p className="text-sm text-slate-500 text-center">
-                Click any user below to sign in instantly (password: password123)
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {demoCredentials.map((demo, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    onClick={() => handleDemoLogin(demo.email)}
-                    disabled={loading}
-                    className="h-auto p-3 bg-white/50 hover:bg-white/80 transition-colors text-left justify-start"
-                  >
-                    <div>
-                      <p className="font-medium text-slate-900">{demo.name}</p>
-                      <p className="text-xs text-slate-500">{demo.email}</p>
-                    </div>
-                  </Button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>

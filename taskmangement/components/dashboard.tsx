@@ -27,6 +27,7 @@ import UserManagement from "@/components/user-management"
 import { useAuth } from "@/contexts/auth-context"
 import type { Task, WorkflowStatus } from "@/types/task"
 import { apiRequest } from "@/lib/api"
+import { get } from "http"
 
 
 
@@ -119,7 +120,9 @@ try{
       method: "PUT",
       data
   }
+
     )
+      getAllTasks()
     console.log("Task updated successfully:", updatetResult) 
     setEditingTask(null)
     Swal.fire({
