@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useMemo, useCallback } from "react"
+import { useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -55,18 +55,7 @@ export default function AuthPage() {
 
  
 
-  const handleDemoLogin = useCallback(
-    async (email: string) => {
-      setLoading(true)
-      setError("")
-      const result = await signIn(email, "password123")
-      if (!result.success) {
-        setError(result.error || "Demo login failed")
-      }
-      setLoading(false)
-    },
-    [signIn],
-  )
+
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">

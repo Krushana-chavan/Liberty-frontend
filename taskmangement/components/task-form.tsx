@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import { useState, useEffect, useMemo, useCallback } from "react"
+import { useState, useEffect, } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,7 +10,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { X, Users, Calendar, Palette, FileText, Repeat, Sparkles } from "lucide-react"
 import type { Task, User, TaskType, TaskColor, WorkflowStatus, fetchUser } from "@/types/task"
 import { apiRequest } from "@/lib/api"
@@ -23,7 +22,7 @@ interface TaskFormProps {
   onClose: () => void
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ task, users, currentUser, onSubmit, onClose }) => {
+const TaskForm: React.FC<TaskFormProps> = ({ task, currentUser, onSubmit, onClose }) => {
   const [formData, setFormData] = useState({
     ownerId: currentUser._id,
     title: "",
@@ -288,7 +287,7 @@ const toggleAssignee = (userId: string) => {
                   </Label>
                   <Select
                     value={formData.reminder}
-                    onValueChange={(value) => setFormData((prev) => ({ ...prev, reminder: value as any }))}
+                    onValueChange={(value) => setFormData((prev) => ({ ...prev, reminder: value  }))}
                   >
                     <SelectTrigger className="h-12 bg-white/50 border-slate-200">
                       <SelectValue />

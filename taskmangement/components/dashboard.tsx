@@ -27,7 +27,6 @@ import UserManagement from "@/components/user-management"
 import { useAuth } from "@/contexts/auth-context"
 import type { Task, WorkflowStatus } from "@/types/task"
 import { apiRequest } from "@/lib/api"
-import { get } from "http"
 
 
 
@@ -40,7 +39,7 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("dashboard")
 
   console.log("Current User:", user)
-  const handleCreateTask = useCallback( async (taskData: Omit<Task, "id" | "createdAt">) => {
+  const handleCreateTask =  async (taskData: Omit<Task, "id" | "createdAt">) => {
     const newTask: Task = {
       ...taskData,
       userId: user?._id || "",
@@ -58,6 +57,7 @@ try{
      
     setShowTaskForm(false)
   }catch (error) {
+    console.error("Error creating task:", error)
     Swal.fire({
       icon: "error",
       title: "Error",
@@ -70,7 +70,7 @@ try{
     if (taskData.assignees.length > 0) {
       console.log(`Email notifications sent to assignees for task: ${taskData.title}`)
     }
-  }, [])
+  }
 
 
 
@@ -107,7 +107,7 @@ try{
     workflowStatus?: WorkflowStatus
     completionStatus?: string
     assignees?: string[]
-    [key: string]: any
+     // Allow additional fields
   }
 
   const handleUpdateTask = async (
@@ -323,7 +323,7 @@ try{
                   },
                 ].map((stat, index) => (
                   <Card
-                    key={stat.title}
+                    key={index}
                     className={`bg-gradient-to-br ${stat.bgGradient} border-0 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1`}
                   >
                     <CardContent className="p-6">
@@ -351,7 +351,7 @@ try{
                     <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center">
                       <Calendar className="w-4 h-4 text-white" />
                     </div>
-                    Today's Focus
+                    Today&#39;s Focus
                     <Badge variant="outline" className="ml-auto">
                       {todayTasks?.length} tasks
                     </Badge>
