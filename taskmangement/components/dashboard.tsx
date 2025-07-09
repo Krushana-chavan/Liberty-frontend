@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useCallback, useEffect } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import Swal from 'sweetalert2'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"

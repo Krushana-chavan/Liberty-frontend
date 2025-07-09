@@ -32,7 +32,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, currentUser, onSubmit, onClos
     time: "09:00",
     color: "Blue" as TaskColor,
     notes: "",
-    assignees: [] as any,
+    assignees: [] as string[], // Initialize as empty array
     workflowStatus: "No Action" as WorkflowStatus,
     completionStatus: "Pending" as "Pending" | "Completed",
     isRecurring: false,
