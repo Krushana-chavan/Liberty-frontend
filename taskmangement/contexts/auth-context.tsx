@@ -20,7 +20,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [users, setUsers] = useState<User[]>()
+  
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -79,9 +79,7 @@ const result = await apiRequest({
     localStorage.removeItem("taskflow_user")
   }
 
-  const updateUsers = (newUsers: User[]) => {
-    setUsers(newUsers)
-  }
+ 
 
   return (
     <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
