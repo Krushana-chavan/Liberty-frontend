@@ -19,6 +19,7 @@ import {
   LogOut,
   Shield,
   UserCheck,
+  Trash,
 } from "lucide-react"
 import TaskForm from "@/components/task-form"
 
@@ -56,6 +57,7 @@ export default function Dashboard() {
       console.log("Task created successfully:", result)
 
       setShowTaskForm(false)
+      getAllTasks()
     } catch (error) {
       console.error("Error creating task:", error)
       Swal.fire({
@@ -72,7 +74,28 @@ export default function Dashboard() {
     }
   }
 
-
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      const result = await apiRequest({
+        url: `/task/deleteTask/${taskId}`,
+        method: "DELETE",
+      })
+      console.log("Task deleted successfully:", result)
+      getAllTasks()
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Task deleted successfully!",
+      })
+    } catch (error) {
+      console.error("Error deleting task:", error)
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to delete task. Please try again.",
+      })
+    }
+  }
 
 
   const getAllTasks = async () => {
@@ -377,11 +400,7 @@ export default function Dashboard() {
                                   <p className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
                                     {task.title}
                                   </p>
-                                  {isTaskOwner(task) && (
-                                    <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700">
-                                      Owner
-                                    </Badge>
-                                  )}
+                                 
                                   {isTaskAssignee(task) && !isTaskOwner(task) && (
                                     <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700">
                                       Assigned
@@ -402,6 +421,11 @@ export default function Dashboard() {
                               <Badge className={`${getStatusColor(task.workflowStatus)} transition-all duration-200`}>
                                 {task.workflowStatus}
                               </Badge>
+                               {user.role == "admin" && (
+                                    <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700"  onClick={()=>{handleDeleteTask(task?._id)}}>
+                                      <Trash/>
+                                    </Badge>
+                                  )}
                               {task.assignees.length > 0 && (
                                 <Badge variant="outline" className="bg-white/50">
                                   <Users className="w-3 h-3 mr-1" />

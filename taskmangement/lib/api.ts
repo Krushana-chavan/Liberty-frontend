@@ -11,7 +11,7 @@ interface ApiRequestOptions {
 }
 
 const axiosInstance = axios.create({
-  baseURL: "https://liberty-backend-qolq.onrender.com",
+  baseURL: "http://localhost:7000", // Adjust the base URL as needed
   headers: {
     "Content-Type": "application/json",
   },
