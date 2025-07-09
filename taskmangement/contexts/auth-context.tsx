@@ -6,7 +6,6 @@ import { apiRequest } from "@/lib/api"
 
 interface AuthContextType {
   user: User | null
- 
   loading: boolean
   signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
   signUp: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>
@@ -59,18 +58,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Check if user already exists
    
     const newUser = {
-
       name,
       email,
       password,
     }
 
     // Add to mock database
-const result = await apiRequest({
+  const result = await apiRequest({
   url:'/auth/signup',
   method:'POST',
   data:newUser
-})
+  })
     return { success: true }
   }
 

@@ -5,10 +5,14 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Users, Mail, Shield, UserCheck, Building, TrendingUp } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
-import React, { useMemo, useCallback } from "react"
+import React, { useMemo, useCallback, useEffect } from "react"
+import { apiRequest } from "@/lib/api"
+import { fetchUser } from "@/types/task"
 
 function UserManagement() {
-  const { users, user: currentUser } = useAuth()
+  const {  user: currentUser } = useAuth()
+
+  const [users, setUsers] = React.useState<fetchUser>()
 
   const getInitials = useCallback((name: string) => {
     return name
@@ -18,12 +22,27 @@ function UserManagement() {
       .toUpperCase()
   }, [])
 
+
+  const getAllUsers = async() =>{
+    const userList = await apiRequest({
+      url: "/user/alluser",
+      method: "GET"
+    })
+    setUsers(userList)
+  
+  }
+
+  useEffect(() => {
+    // Fetch all users when component mounts
+    getAllUsers()
+  },[ ])
+
   const getAvatarColor = useCallback((index: number) => {
     const colors = ["bg-blue-500", "bg-emerald-500", "bg-purple-500", "bg-amber-500", "bg-red-500"]
-    return colors[index % colors.length]
+    return colors[index % colors?.length]
   }, [])
 
-  const uniqueDomains = useMemo(() => new Set(users.map((u) => u.email.split("@")[1])).size, [users])
+  const uniqueDomains = useMemo(() => new Set(users && users.map((u:any) => u.email.split("@")[1])).size, [users])
 
   return (
     <div className="space-y-6">
@@ -49,7 +68,7 @@ function UserManagement() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-600 mb-1">Total Members</p>
-                <p className="text-3xl font-bold text-blue-600">{users.length}</p>
+                <p className="text-3xl font-bold text-blue-600">{users?.length}</p>
               </div>
               <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
                 <Users className="w-6 h-6 text-white" />
@@ -64,7 +83,7 @@ function UserManagement() {
               <div>
                 <p className="text-sm font-medium text-slate-600 mb-1">Active Users</p>
                 <p className="text-3xl font-bold text-emerald-600">
-                  {users.filter((u) => u.email.includes("@")).length}
+                  {users && users.filter((u:any) => u.email.includes("@")).length}
                 </p>
               </div>
               <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center">
@@ -96,17 +115,17 @@ function UserManagement() {
             <UserCheck className="w-5 h-5" />
             Team Members
             <Badge variant="outline" className="ml-auto bg-white/50">
-              {users.length} members
+              {users?.length} members
             </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {users.map((user, index) => (
+            { users && users.map((user:any, index:any) => (
               <Card
                 key={user.id}
                 className={`bg-white border shadow-sm hover:shadow-md transition-shadow duration-200 ${
-                  user.id === currentUser?.id ? "ring-2 ring-blue-500 bg-blue-50/80" : ""
+                  user.id === currentUser?._id ? "ring-2 ring-blue-500 bg-blue-50/80" : ""
                 }`}
               >
                 <CardContent className="p-6">
@@ -119,7 +138,7 @@ function UserManagement() {
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold text-slate-900">{user.name}</h3>
-                        {user.id === currentUser?.id && (
+                        {user.id === currentUser?._id && (
                           <Badge className="text-xs bg-gradient-to-r from-blue-500 to-indigo-500">
                             <Shield className="w-3 h-3 mr-1" />
                             You
