@@ -20,7 +20,7 @@ interface DayViewProps {
   currentUser: User
 }
 
-function DayView({ tasks, selectedDate, onDateChange, onTaskEdit, users, currentUser }: DayViewProps) {
+function DayView({ tasks, selectedDate, onDateChange, onTaskEdit, users }: DayViewProps) {
   const hours = useMemo(() => Array.from({ length: 24 }, (_, i) => i), [])
 
   const navigateDate = (direction: "prev" | "next") => {
@@ -79,10 +79,7 @@ function DayView({ tasks, selectedDate, onDateChange, onTaskEdit, users, current
     })
   }
 
-  const getUserName = (userId: string) => {
-    const user = users.find((u) => u._id === userId)
-    return user ? user.name : "Unknown"
-  }
+
 
   const getTimeIcon = (hour: number) => {
     if (hour >= 6 && hour < 12) return <Sun className="w-4 h-4 text-amber-500" />
