@@ -5,8 +5,8 @@ type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH"
 interface ApiRequestOptions {
   url: string                 
   method?: Method              
-  data?: any                   
-  params?: any                
+  data?: string | object                  
+  params?: string | object               
   token?: string               
 }
 
@@ -41,8 +41,16 @@ const authToken = rawToken.replace(/^"|"$/g, "")
     })
 
     return response.data
-  } catch (error: any) {
-    console.error("API Error:", error.response?.data || error.message)
-    throw new Error(error.response?.data?.message || "API request failed")
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error("API Error:", error.response?.data || error.message)
+      throw new Error(error.response?.data?.message || "API request failed")
+    } else if (error instanceof Error) {
+      console.error("API Error:", error.message)
+      throw new Error(error.message || "API request failed")
+    } else {
+      console.error("API Error:", error)
+      throw new Error("API request failed")
+    }
   }
 }

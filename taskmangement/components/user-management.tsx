@@ -7,7 +7,7 @@ import { Users, Mail, Shield, UserCheck, Building, TrendingUp } from "lucide-rea
 import { useAuth } from "@/contexts/auth-context"
 import React, { useMemo, useCallback, useEffect } from "react"
 import { apiRequest } from "@/lib/api"
-import { fetchUser, User } from "@/types/task"
+import {  User } from "@/types/task"
 
 function UserManagement() {
   const {  user: currentUser } = useAuth()

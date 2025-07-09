@@ -383,7 +383,7 @@ const toggleAssignee = (userId: string) => {
                 </Label>
                 <Select
                   value={formData.recurringType}
-                  onValueChange={(value: any) => setFormData((prev) => ({ ...prev, recurringType: value }))}
+                  onValueChange={(value) => setFormData((prev) => ({ ...prev, recurringType: value as "Daily" | "Weekdays" | "Weekly" | "Monthly" | "Yearly" }))}
                 >
                   <SelectTrigger className="h-12 bg-white/50 border-slate-200">
                     <SelectValue />
@@ -406,7 +406,7 @@ const toggleAssignee = (userId: string) => {
                 </Label>
                 <Select
                   value={formData.recurringType}
-                  onValueChange={(value: any) => setFormData((prev) => ({ ...prev, recurringType: value }))}
+                  onValueChange={(value: string) => setFormData((prev) => ({ ...prev, recurringType: value as "Daily" | "Weekdays" | "Weekly" | "Monthly" | "Yearly" }))}
                 >
                   <SelectTrigger className="h-12 bg-white/50 border-slate-200">
                     <SelectValue />
