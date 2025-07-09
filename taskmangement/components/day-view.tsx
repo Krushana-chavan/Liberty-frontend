@@ -20,7 +20,7 @@ interface DayViewProps {
   currentUser: User
 }
 
-function DayView({ tasks, selectedDate, onDateChange, onTaskEdit, users }: DayViewProps) {
+function DayView({ tasks, selectedDate, onDateChange, onTaskEdit }: DayViewProps) {
   const hours = useMemo(() => Array.from({ length: 24 }, (_, i) => i), [])
 
   const navigateDate = (direction: "prev" | "next") => {
