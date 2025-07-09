@@ -10,6 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Target, Mail, Lock, User, Eye, EyeOff, Sparkles } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
+import Router from "next/router"
+import Swal from "sweetalert2"
 
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false)
@@ -37,16 +39,38 @@ export default function AuthPage() {
       } else {
         result = await signIn(formData.email, formData.password)
       }
-      if (!SignupResult?.success) {
+      console.log("SignIn Result:", SignupResult)
+      if (SignupResult?.success) {
         setFormData({ name: "", email: "", password: "" })
-        setIsSignUp(false)
+        Swal.fire({
+          title: "Account Created",
+          text: "Your account has been created successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
+        }).then(() => {
+          setIsSignUp(false)
+        })
+       
+       
         return
       }
-      if (!result?.success) {
+      if (result?.success) {
+        setFormData({ name: "", email: "", password: "" })
+        Swal.fire({
+          title: "Welcome Back",
+          text: "You have successfully signed in!",
+          icon: "success",
+          confirmButtonText: "OK",
+        }).then(() => {
+          Router.push("/dashboard")
+        })
+        return
+      }
+      if (!result?.success && !SignupResult?.success) {
         setError(result?.error || "Authentication failed")
       }
     } catch (err) {
-      setError("An unexpected error occurred")
+      setError(err instanceof Error ? err.message : "An unexpected error occurred")
       console.error("Authentication error:", err)
     } finally {
       setLoading(false)
