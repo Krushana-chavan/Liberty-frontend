@@ -115,7 +115,7 @@ const getAllUser = async () => {
     setAvailableUsers(result); // show all users
   } else {
     // Filter only the current user
-    const currentUserOnly = result.filter((user: any) => user._id === currentUser._id);
+    const currentUserOnly = result.filter((user: User) => user._id === currentUser._id);
     setAvailableUsers(currentUserOnly);
   }
 };
