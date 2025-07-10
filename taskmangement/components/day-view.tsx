@@ -184,6 +184,7 @@ function DayView({ tasks, selectedDate, onDateChange, onTaskEdit }: DayViewProps
                                   <Badge variant="outline" className="text-xs bg-white/80">
                                     {task.type === "Meeting" ? "🤝" : task.type === "Week-off" ? "🏖️" : "📋"} {task.type}
                                   </Badge>
+                                  {task.reminder}
                                 </div>
                                 <p className="text-sm opacity-80 mb-3 font-medium">{task.company}</p>
                                 <div className="flex items-center gap-4 text-sm mb-3">
@@ -198,6 +199,7 @@ function DayView({ tasks, selectedDate, onDateChange, onTaskEdit }: DayViewProps
                                     </span>
                                   )}
                                 </div>
+
                                 {task.notes && (
                                   <p className="text-sm opacity-75 mb-3 bg-white/30 p-2 rounded-md">{task.notes}</p>
                                 )}

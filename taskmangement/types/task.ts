@@ -17,6 +17,7 @@ export type TaskColor = "Red" | "Green" | "Blue" | "Yellow"
 export type WorkflowStatus = "No Action" | "Accepted" | "In Progress" | "Done"
 export type CompletionStatus = "Pending" | "Completed"
 export type RecurringType = "Daily" | "Weekdays" | "Weekly" | "Monthly" | "Yearly"
+export type ReminderType = "5m" | "10m" | "15m" | "30m" | "1h" | "1d" | "None"
 
 export interface Task {
   _id: string

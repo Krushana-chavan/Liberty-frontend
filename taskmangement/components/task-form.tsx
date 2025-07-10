@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { X, Users, Calendar, Palette, FileText, Repeat, Sparkles } from "lucide-react"
-import type { Task, User, TaskType, TaskColor, WorkflowStatus, fetchUser } from "@/types/task"
+import type { Task, User, TaskType, TaskColor, WorkflowStatus, fetchUser, ReminderType } from "@/types/task"
 import { apiRequest } from "@/lib/api"
 
 interface TaskFormProps {
@@ -41,6 +41,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, currentUser, onSubmit, onClos
   })
 
   const [availableUsers,setAvailableUsers] = useState<fetchUser>()
+  console.log(task)
   useEffect(() => {
     if (task) {
       setFormData({
@@ -71,6 +72,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, currentUser, onSubmit, onClos
       ownerId: currentUser._id,
       _id: task ? task._id :'', // Use existing ID if editing
       userId: currentUser._id, // Ensure userId is set to current user's ID
+      reminder: formData.reminder || "None", // Default to 1 day if not set
+      workflowStatus: formData.workflowStatus || "No Action", // Default to "No Action" if not set
     })
   }
 
@@ -102,13 +105,21 @@ const toggleAssignee = (userId: string) => {
 const isAdmin = currentUser.role === "admin"
 
 
-  const getAllUser = async ()=>{
-      const result = await apiRequest({
-        url:"/user/alluser",
-        method:'GET'
-      })
-      setAvailableUsers(result)
+const getAllUser = async () => {
+  const result = await apiRequest({
+    url: "/user/alluser",
+    method: 'GET'
+  });
+
+  if (isAdmin) {
+    setAvailableUsers(result); // show all users
+  } else {
+    // Filter only the current user
+    const currentUserOnly = result.filter((user: any) => user._id === currentUser._id);
+    setAvailableUsers(currentUserOnly);
   }
+};
+
 
   useEffect(()=>{
     getAllUser()
@@ -161,7 +172,7 @@ const isAdmin = currentUser.role === "admin"
                   value={formData.title}
                   onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                   required
-                  disabled={!isAdmin}
+                  
                   className="h-12 bg-white/50 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
                   placeholder="Enter task title..."
                 />
@@ -172,7 +183,7 @@ const isAdmin = currentUser.role === "admin"
                 </Label>
                 <Input
                   id="company"
-                  disabled={!isAdmin}
+                  
                   value={formData.company}
                   onChange={(e) => setFormData((prev) => ({ ...prev, company: e.target.value }))}
                   className="h-12 bg-white/50 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
@@ -196,7 +207,7 @@ const isAdmin = currentUser.role === "admin"
                 </Label>
                 <Select
                   value={formData.type}
-                  disabled={!isAdmin}
+               
                   onValueChange={(value: TaskType) => setFormData((prev) => ({ ...prev, type: value }))}
                 >
                   <SelectTrigger className="h-12 bg-white/50 border-slate-200">
@@ -229,7 +240,7 @@ const isAdmin = currentUser.role === "admin"
                 <Input
                   id="time"
                   type="time"
-                  disabled={!isAdmin}
+                 
                   value={formData.time}
                   onChange={(e) => setFormData((prev) => ({ ...prev, time: e.target.value }))}
                   className="h-12 bg-white/50 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
@@ -248,7 +259,7 @@ const isAdmin = currentUser.role === "admin"
                     <button
                       key={option.value}
                       type="button"
-                      disabled={!isAdmin}
+                     
                       onClick={() => setFormData((prev) => ({ ...prev, color: option.value as TaskColor }))}
                       className={`flex items-center gap-3 p-3 rounded-lg border-2 transition-all duration-200 ${formData.color === option.value
                           ? "border-blue-500 bg-blue-50"
@@ -262,24 +273,27 @@ const isAdmin = currentUser.role === "admin"
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="status" className="text-sm font-medium text-slate-700">
-                  Workflow Status
-                </Label>
-                <Select
-                  value={formData.workflowStatus}
-                  onValueChange={(value: WorkflowStatus) => setFormData((prev) => ({ ...prev, workflowStatus: value }))}
-                >
-                  <SelectTrigger className="h-12 bg-white/50 border-slate-200">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="No Action">⏸️ No Action</SelectItem>
-                    <SelectItem value="Accepted">✅ Accepted</SelectItem>
-                    <SelectItem value="In Progress">🔄 In Progress</SelectItem>
-                    <SelectItem value="Done">✨ Done</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+  <Label htmlFor="status" className="text-sm font-medium text-slate-700">
+    Workflow Status
+  </Label>
+  <Select
+    value={formData.workflowStatus || "No Action"}
+    onValueChange={(value: WorkflowStatus) =>
+      setFormData((prev) => ({ ...prev, workflowStatus: value }))
+    }
+  >
+    <SelectTrigger className="h-12 bg-white/50 border-slate-200">
+      <SelectValue placeholder="Select workflow status" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="No Action">⏸️ No Action</SelectItem>
+      <SelectItem value="Accepted">✅ Accepted</SelectItem>
+      <SelectItem value="In Progress">🔄 In Progress</SelectItem>
+      <SelectItem value="Done">✨ Done</SelectItem>
+    </SelectContent>
+  </Select>
+</div>
+
               <div className="space-y-2">
                
                 <Label className="text-sm font-medium text-slate-700 flex items-center gap-2">
@@ -291,8 +305,8 @@ const isAdmin = currentUser.role === "admin"
                     Notify me before
                   </Label>
                   <Select
-                    value={formData.reminder}
-                    onValueChange={(value) => setFormData((prev) => ({ ...prev, reminder: value  }))}
+                    value={formData.reminder || "1d"}
+                    onValueChange={(value:ReminderType) => setFormData((prev) => ({ ...prev, reminder: value  }))}
                   >
                     <SelectTrigger className="h-12 bg-white/50 border-slate-200">
                       <SelectValue />
@@ -349,7 +363,7 @@ const isAdmin = currentUser.role === "admin"
                   >
                     <Checkbox
                       id={`user-${user._id}`}
-                      disabled={!isAdmin}
+                     
                       checked={formData.assignees.includes(user._id)}
                       onClick={() => toggleAssignee(user._id)}
                     />
@@ -375,7 +389,7 @@ const isAdmin = currentUser.role === "admin"
               <Checkbox
                 id="recurring"
                 checked={formData.isRecurring}
-                disabled={!isAdmin}
+               
                 onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, isRecurring: !!checked }))}
               />
               <Label htmlFor="recurring" className="font-medium text-slate-700">

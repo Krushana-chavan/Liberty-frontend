@@ -231,7 +231,7 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-           { user.role == "admin" &&  <Button
+           { <Button
               onClick={() => setShowTaskForm(true)}
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
             >
